@@ -1,0 +1,18 @@
+ATM Console UI Mockup
+
+Main Menu
+1. Login
+2. Exit
+
+Customer Menu
+1. Withdraw Cash
+2. Deposit Cash
+3. Display Balance
+4. Logout
+
+Administrator Menu
+1. Create New Account
+2. Delete Existing Account
+3. Update Account Information
+4. Search for Account
+5. Logout

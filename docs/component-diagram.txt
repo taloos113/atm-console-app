@@ -1,0 +1,19 @@
+ATM Console Application Component Diagram
+
+[Console UI Layer]
+- MainMenu
+- CustomerMenu
+- AdminMenu
+
+[Service Layer]
+- AuthService
+- CustomerService
+- AdminService
+
+[Repository Layer]
+- AccountRepository
+- TransactionRepository
+
+[Database Layer]
+- DBConnection
+- MySQL Database

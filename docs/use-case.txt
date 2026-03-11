@@ -1,0 +1,20 @@
+ATM Console Application Use Case Diagram
+
+Actors:
+1. Customer
+2. Administrator
+
+Customer Use Cases:
+- Login
+- Withdraw Cash
+- Deposit Cash
+- Display Balance
+- Logout
+
+Administrator Use Cases:
+- Login
+- Create New Account
+- Delete Existing Account
+- Update Account Information
+- Search for Account
+- Logout

@@ -1,0 +1,12 @@
+ATM Console Application Deployment Diagram
+
+User Computer
+- Java Runtime
+- ATM Console Application
+
+Database Server
+- MySQL Server
+- atm_system database
+
+Connection
+- JDBC
