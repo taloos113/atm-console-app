@@ -14,18 +14,14 @@
 
     <name>ATM Console Application</name>
     <description>
-        ATM console application using Java, Maven, MySQL, JDBC, unit tests, Checkstyle, Javadoc, and JaCoCo coverage.
+        ATM console application using Java, Maven, MySQL, JDBC, unit tests, Checkstyle, Javadocs, and JaCoCo coverage.
     </description>
 
     <properties>
-        <!-- Java version -->
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-
-        <!-- Encoding -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <!-- Dependency versions -->
         <junit.version>5.10.2</junit.version>
         <mockito.version>5.11.0</mockito.version>
         <mysql.version>8.4.0</mysql.version>
@@ -79,17 +75,36 @@
                 </configuration>
             </plugin>
 
-            <!-- Run the console application with: mvn exec:java -->
+            <!-- Copy JaCoCo agent to target folder so it works on both Windows and GitHub Actions -->
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.3.0</version>
-                <configuration>
-                    <mainClass>atm.App</mainClass>
-                </configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.7.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-jacoco-agent</id>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.jacoco</groupId>
+                                    <artifactId>org.jacoco.agent</artifactId>
+                                    <version>${jacoco.version}</version>
+                                    <classifier>runtime</classifier>
+                                    <type>jar</type>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                    <destFileName>jacoco-agent.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
-            <!-- Unit test runner with forced JaCoCo agent -->
+            <!-- Unit test runner with portable JaCoCo agent path -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -98,14 +113,7 @@
                     <useModulePath>false</useModulePath>
                     <forkCount>1</forkCount>
                     <reuseForks>true</reuseForks>
-
-                    <!-- 
-                        This uses your confirmed local JaCoCo agent path.
-                        It writes the coverage execution file to target/jacoco.exec.
-                    -->
-                    <argLine>
-                        -javaagent:C:/Users/23216/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=target/jacoco.exec
-                    </argLine>
+                    <argLine>-javaagent:target/jacoco-agent.jar=destfile=target/jacoco.exec</argLine>
                 </configuration>
             </plugin>
 
@@ -139,7 +147,6 @@
                 <configuration>
                     <dataFile>${project.build.directory}/jacoco.exec</dataFile>
                     <excludes>
-                        <!-- Exclude console/database infrastructure from coverage calculation -->
                         <exclude>atm/App.class</exclude>
                         <exclude>atm/ui/**</exclude>
                         <exclude>atm/db/**</exclude>
@@ -148,7 +155,6 @@
                     </excludes>
                 </configuration>
                 <executions>
-                    <!-- Generate JaCoCo coverage report during verify -->
                     <execution>
                         <id>report</id>
                         <phase>verify</phase>
@@ -157,7 +163,6 @@
                         </goals>
                     </execution>
 
-                    <!-- Require at least 90% line coverage -->
                     <execution>
                         <id>check</id>
                         <phase>verify</phase>
@@ -180,6 +185,16 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <!-- Run the console application with: mvn exec:java -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <mainClass>atm.App</mainClass>
+                </configuration>
             </plugin>
 
             <!-- Generate Java documentation -->
